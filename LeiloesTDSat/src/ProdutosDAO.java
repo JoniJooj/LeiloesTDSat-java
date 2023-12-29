@@ -27,25 +27,49 @@ public class ProdutosDAO {
         
         
         try {
-            conectaDAO bd = new conectaDAO();
-            bd.conectar();
+            conectaDAO DAO = new conectaDAO();
+            DAO.conectar();
 
             String sql = "INSERT INTO produtos(nome , valor , status) VALUES(?,?,?)";
-            PreparedStatement consulta = bd.getConnection().prepareStatement(sql);
+            PreparedStatement consulta = DAO.getConnection().prepareStatement(sql);
             consulta.setString(1, produto.getNome());
             consulta.setInt(2, produto.getValor());
             consulta.setString(3, produto.getStatus());
 
             consulta.execute();
-            bd.desconectar();
+            DAO.desconectar();
+            System.out.println("Cadastro realizado com sucesso");
+
         } catch (SQLException e) {
             System.out.println("Erro ao inserir registro no banco de dados");
         }
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
-        
-        return listagem;
+    ArrayList<ProdutosDTO> produtos = new ArrayList<>();
+
+        try {
+            conectaDAO DAO = new conectaDAO();
+            DAO.conectar();
+
+            String sql = "SELECT * FROM proditos";
+            PreparedStatement consulta = DAO.getConnection().prepareStatement(sql);
+            ResultSet resposta = consulta.executeQuery();
+
+            while (resposta.next()) {
+                ProdutosDTO P = new ProdutosDTO();
+                P.setId(resposta.getInt("id"));
+                P.setNome(resposta.getString("nome"));
+                P.setValor(resposta.getInt("valor"));
+                P.setStatus(resposta.getString("status"));
+                produtos.add(P);
+            }
+            DAO.desconectar();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar o registro no banco de dados.");
+        }
+        return produtos;
     }
     
     

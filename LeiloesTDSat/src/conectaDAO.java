@@ -17,17 +17,35 @@ import javax.swing.JOptionPane;
  */
 public class conectaDAO {
     
-    public Connection connectDB(){
-        Connection conn = null;
-        
+   private Connection conexao;
+
+    public void conectar() {
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
-            
-        } catch (SQLException erro){
-            JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+            System.out.println("Iniciando conexao");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/produtos?autoReconnect=true&useSSL=false", "root", "4584rtirRTIR");
+            System.out.println("Sucesso De Conexão");
+        } catch (SQLException e) {
+            System.out.println("Falha nao conseguiu conectar");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Falha nao conseguiu conectar a");
         }
-        return conn;
+    }
+
+    public void desconectar() {
+        try {
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+                System.out.println("Desconectado Com Sucesso");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERRO ao desconectar");
+        }
+    }
+
+    public Connection getConnection() {
+        return conexao;
     }
     
 }

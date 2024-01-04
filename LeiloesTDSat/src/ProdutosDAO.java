@@ -52,7 +52,53 @@ public class ProdutosDAO {
             conectaDAO DAO = new conectaDAO();
             DAO.conectar();
 
-            String sql = "SELECT * FROM proditos";
+            String sql = "SELECT * FROM produtos";
+            PreparedStatement consulta = DAO.getConnection().prepareStatement(sql);
+            ResultSet resposta = consulta.executeQuery();
+
+            while (resposta.next()) {
+                ProdutosDTO P = new ProdutosDTO();
+                P.setId(resposta.getInt("id"));
+                P.setNome(resposta.getString("nome"));
+                P.setValor(resposta.getInt("valor"));
+                P.setStatus(resposta.getString("status"));
+                produtos.add(P);
+            }
+            DAO.desconectar();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar o registro no banco de dados.");
+        }
+        return produtos;
+    }
+     public void venderProduto (ProdutosDTO produto){
+        
+        
+        try {
+            conectaDAO DAO = new conectaDAO();
+            DAO.conectar();
+
+            String sql = "UPDATE produtos SET categoria= 'vendido' WHERE id=?";
+            PreparedStatement consulta = DAO.getConnection().prepareStatement(sql);
+           
+            consulta.setInt(1, produto.getId());
+
+            consulta.execute();
+            DAO.desconectar();
+            System.out.println("Cadastro realizado com sucesso");
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao inserir registro no banco de dados");
+        }
+    }
+    public ArrayList<ProdutosDTO> listarProdutosVendidos(){
+    ArrayList<ProdutosDTO> produtos = new ArrayList<>();
+
+        try {
+            conectaDAO DAO = new conectaDAO();
+            DAO.conectar();
+
+            String sql = "SELECT * FROM produtos where categoria = 'vendido'";
             PreparedStatement consulta = DAO.getConnection().prepareStatement(sql);
             ResultSet resposta = consulta.executeQuery();
 

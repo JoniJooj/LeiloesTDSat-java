@@ -162,7 +162,7 @@ public class vendasVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(ArrayList<ProdutosDTO> listarProdutos){
+    private void listarProdutosVendidos(ArrayList<ProdutosDTO> listarProdutosVendidos){
         try {
             ProdutosDAO produtosdao = new ProdutosDAO();
             
